@@ -4,7 +4,7 @@
   "parameters": {
     "assetLocation": {
       "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/bretthacker/AAD_ADFS_Lab/master/AAD_ADFS_Lab/",
+      "defaultValue": "https://raw.githubusercontent.com/mcampsteyn/active-directory-lab-hybrid-adfs/master/lab-hybrid-adfs/",
       "metadata": { "description": "This is the location in which all the linked templates are stored." }
     },
     "adminUsername": {
@@ -26,6 +26,11 @@
       "type": "string",
       "defaultValue": "contoso.com",
       "metadata": { "description": "Two-part internal AD name - short/NB name will be first part ('contoso')." }
+    },
+    "dnsName": {
+      "type": "string",
+      "defaultValue": "contoso",
+      "metadata": { "description": "DNS prefix" }
     },
     "usersArray": {
       "type": "array",
@@ -107,22 +112,22 @@
     "adfsVMNameSuffix": "fs",
     "wapVMNameSuffix": "px",
     "location": "[resourceGroup().location]",
-    "companyNamePrefix": "[split(parameters('adDomainName'),'.')[0]]",
+    "companyNamePrefix": "[parameters('dnsName')]",
     "adfsVMName": "[toupper(concat(variables('companyNamePrefix'), variables('adfsVMNameSuffix')))]",
     "adVMName": "[toupper(concat(variables('companyNamePrefix'), variables('addcVMNameSuffix')))]",
     "adNSGName": "[concat('INT-AD', parameters('deploymentNumber'))]",
     "virtualNetworkName": "[concat(variables('companyNamePrefix'), parameters('deploymentNumber'), '-vnet')]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
-    "adSubnetName": "[concat('adSubnet', parameters('deploymentNumber'))]",
-    "adSubnetID": "[concat(variables('vnetID'),'/subnets/',variables('adSubnetName'))]",
+    "adSubnetName": "[variables('companyNamePrefix'), '-', concat('adSubnet', parameters('deploymentNumber'))]",
+    "adSubnetID": "[variables('companyNamePrefix'), '-', concat(variables('vnetID'),'/subnets/',variables('adSubnetName'))]",
     "adTemplateURI": "[concat(parameters('assetLocation'),'Templates/adDeploy.json')]",
     "clientTemplateURI": "[concat(parameters('assetLocation'),'Templates/clientDeploy.json')]",
-    "dmzNSGName": "[concat('DMZ-WAP', parameters('deploymentNumber'))]",
-    "dmzSubnetID": "[concat(variables('vnetID'),'/subnets/',variables('dmzSubnetName'))]",
-    "dmzSubnetName": "[concat('dmzSubnet', parameters('deploymentNumber'))]",
-    "cliNSGName": "[concat('INT-CLI', parameters('deploymentNumber'))]",
-    "cliSubnetID": "[concat(variables('vnetID'),'/subnets/',variables('cliSubnetName'))]",
-    "cliSubnetName": "[concat('clientSubnet', parameters('deploymentNumber'))]",
+    "dmzNSGName": "[concat(variables('companyNamePrefix'), '-', 'DMZ-WAP', parameters('deploymentNumber'))]",
+    "dmzSubnetID": "[concat(variables('companyNamePrefix'), '-', variables('vnetID'),'/subnets/',variables('dmzSubnetName'))]",
+    "dmzSubnetName": "[concat(variables('companyNamePrefix'), '-', 'dmzSubnet', parameters('deploymentNumber'))]",
+    "cliNSGName": "[concat(variables('companyNamePrefix'), '-', 'INT-CLI', parameters('deploymentNumber'))]",
+    "cliSubnetID": "[concat(variables('companyNamePrefix'), '-', variables('vnetID'),'/subnets/',variables('cliSubnetName'))]",
+    "cliSubnetName": "[concat(variables('companyNamePrefix'), '-', 'clientSubnet', parameters('deploymentNumber'))]",
     "imageOffer": "WindowsServer",
     "imagePublisher": "MicrosoftWindowsServer",
     "imageSKU": "2012-R2-Datacenter",
